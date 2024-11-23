@@ -3,16 +3,16 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.createTable('threads', {
+  pgm.createTable('comments', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    title: {
-      type: 'TEXT',
+    thread_id: {
+      type: 'VARCHAR(50)',
       notNull: true,
     },
-    body: {
+    content: {
       type: 'TEXT',
       notNull: true,
     },
@@ -29,7 +29,14 @@ exports.up = (pgm) => {
       notNull: true,
     },
   });
-  pgm.addConstraint('threads', 'fk_threads_owner_users_id', {
+  pgm.addConstraint('comments', 'fk_comments.id_threads.id', {
+    foreignKeys: {
+      columns: 'thread_id',
+      references: 'threads(id)',
+      onDelete: 'CASCADE',
+    },
+  });
+  pgm.addConstraint('comments', 'fk_comments.owner_users.id', {
     foreignKeys: {
       columns: 'owner',
       references: 'users(id)',
@@ -39,5 +46,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-  pgm.dropTable('threads');
+  pgm.dropTable('comments');
 };
