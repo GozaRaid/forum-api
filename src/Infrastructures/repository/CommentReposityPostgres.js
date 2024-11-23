@@ -1,5 +1,7 @@
 const CommentsRepository = require('../../Domains/comments/CommentsRepostitory');
 const AddedComment = require('../../Domains/comments/entities/AddedComment');
+const NotFoundError = require('../../Commons/exceptions/NotFoundError');
+const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
 
 class CommentsRepositoryPostgres extends CommentsRepository {
   constructor(pool, idGenerator) {
@@ -20,6 +22,41 @@ class CommentsRepositoryPostgres extends CommentsRepository {
     const result = await this._pool.query(query);
 
     return new AddedComment({ ...result.rows[0] });
+  }
+
+  async checkAvailabilityComment(commentId) {
+    const query = {
+      text: 'SELECT id FROM comments WHERE id = $1',
+      values: [commentId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('komentar tidak ditemukan');
+    }
+  }
+
+  async verifyCommentOwner(commentId, owner) {
+    const query = {
+      text: 'SELECT owner FROM comments WHERE id = $1',
+      values: [commentId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (result.rows[0].owner !== owner) {
+      throw new AuthorizationError('anda tidak berhak mengakses resource ini');
+    }
+  }
+
+  async deleteCommentById(commentId) {
+    const query = {
+      text: 'DELETE FROM comments WHERE id = $1 RETURNING id',
+      values: [commentId],
+    };
+
+    await this._pool.query(query);
   }
 }
 

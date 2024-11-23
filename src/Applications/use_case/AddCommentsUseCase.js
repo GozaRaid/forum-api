@@ -11,7 +11,7 @@ class AddCommentsUseCase {
 
     const addComment = new AddComment({ content });
 
-    return this._commentsRepository.addComment(threadId, owner, addComment);
+    return this._commentsRepository.addComment(threadId, owner, addComment.content);
   }
 }
 
