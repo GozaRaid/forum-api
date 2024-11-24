@@ -3,7 +3,7 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.createTable('replycomments', {
+  pgm.createTable('replys', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
@@ -20,6 +20,10 @@ exports.up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    is_delete: {
+      type: 'BOOLEAN',
+      default: false,
+    },
     created_at: {
       type: 'TEXT',
       notNull: true,
@@ -29,14 +33,14 @@ exports.up = (pgm) => {
       notNull: true,
     },
   });
-  pgm.addConstraint('replycomments', 'fk_replycomments.owner_users.id', {
+  pgm.addConstraint('replys', 'fk_replys.owner_users.id', {
     foreignKeys: {
       columns: 'owner',
       references: 'users(id)',
       onDelete: 'CASCADE',
     },
   });
-  pgm.addConstraint('replycomments', 'fk_replycomments.id_comments.id', {
+  pgm.addConstraint('replys', 'fk_replys.id_comments.id', {
     foreignKeys: {
       columns: 'comment_id',
       references: 'comments(id)',
@@ -46,5 +50,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-  pgm.dropTable('replycomments');
+  pgm.dropTable('replys');
 };

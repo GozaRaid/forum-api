@@ -3,7 +3,7 @@ class ThreadRepository {
     throw new Error('THREADS_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async checkAvailabilityThread(threadId) {
+  async verifyAvailabilityThread(threadId) {
     throw new Error('THREADS_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 

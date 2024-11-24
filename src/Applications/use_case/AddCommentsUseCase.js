@@ -7,10 +7,8 @@ class AddCommentsUseCase {
   }
 
   async execute(threadId, owner, content) {
-    await this._threadRepository.checkAvailabilityThread(threadId);
-
+    await this._threadRepository.verifyAvailabilityThread(threadId);
     const addComment = new AddComment({ content });
-
     return this._commentsRepository.addComment(threadId, owner, addComment.content);
   }
 }
