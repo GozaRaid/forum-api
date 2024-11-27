@@ -1,5 +1,5 @@
 class ReplysRepository {
-  async AddReply(content) {
+  async addReply(content) {
     throw new Error('COMMENTS_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 

@@ -5,12 +5,12 @@ class DeleteReplyUseCase {
     this._threadRepository = threadRepository;
   }
 
-  async execute(replyId, commentId, owner, threadId) {
-    await this._replyRepository.verifyAvailabilityReply(replyId);
-    await this._commentsRepository.verifyAvailabilityComment(commentId);
-    await this._threadRepository.verifyAvailabilityThread(threadId);
-    await this._replyRepository.verifyReplyOwner(replyId, owner);
-    await this._replyRepository.deleteReplyById(replyId);
+  async execute(useCasePayload) {
+    await this._replyRepository.verifyAvailabilityReply(useCasePayload.replyId);
+    await this._commentsRepository.verifyAvailabilityComment(useCasePayload.commentId);
+    await this._threadRepository.verifyAvailabilityThread(useCasePayload.threadId);
+    await this._replyRepository.verifyReplyOwner(useCasePayload.replyId, useCasePayload.owner);
+    await this._replyRepository.deleteReplyById(useCasePayload.replyId);
   }
 }
 

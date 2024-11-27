@@ -14,12 +14,13 @@ class ReplysHandler {
     const { id: owner } = request.auth.credentials;
     const { threadId, commentId } = request.params;
     const { content } = request.payload;
-    const addedReply = await addReplyUseCase.execute(
+    const useCasePayload = {
       threadId,
       commentId,
       owner,
       content,
-    );
+    };
+    const addedReply = await addReplyUseCase.execute(useCasePayload);
 
     const response = h.response({
       status: 'success',
@@ -37,8 +38,14 @@ class ReplysHandler {
     );
     const { id: owner } = request.auth.credentials;
     const { threadId, commentId, replyId } = request.params;
+    const useCasePayload = {
+      replyId,
+      commentId,
+      owner,
+      threadId,
+    };
 
-    await deleteReplyUseCase.execute(replyId, commentId, owner, threadId);
+    await deleteReplyUseCase.execute(useCasePayload);
 
     const response = h.response({
       status: 'success',

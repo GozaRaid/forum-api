@@ -5,10 +5,10 @@ class GetDetailThreadById {
     this._replyRepository = replyRepository;
   }
 
-  async execute(threadId) {
-    await this._threadRepository.verifyAvailabilityThread(threadId);
-    const thread = await this._threadRepository.getDetailThreadById(threadId);
-    const comments = await this._commentsRepository.getCommentsByThreadId(threadId);
+  async execute(useCasePayload) {
+    await this._threadRepository.verifyAvailabilityThread(useCasePayload.threadId);
+    const thread = await this._threadRepository.getDetailThreadById(useCasePayload.threadId);
+    const comments = await this._commentsRepository.getCommentsByThreadId(useCasePayload.threadId);
 
     const commentsWithReplies = await Promise.all(
       comments.map(async (comment) => {

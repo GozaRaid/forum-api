@@ -16,11 +16,12 @@ class CommentsHandler {
     const { id: owner } = request.auth.credentials;
     const { threadId } = request.params;
     const { content } = request.payload;
-    const addedComment = await addCommentsUseCase.execute(
+    const useCasePayload = {
       threadId,
       owner,
       content,
-    );
+    };
+    const addedComment = await addCommentsUseCase.execute(useCasePayload);
 
     const response = h.response({
       status: 'success',
@@ -37,9 +38,13 @@ class CommentsHandler {
       DeleteCommentUseCase.name,
     );
     const { id: owner } = request.auth.credentials;
-    const { threadId, commentsId } = request.params;
-
-    await deleteCommentUseCase.execute(commentsId, owner, threadId);
+    const { threadId, commentId } = request.params;
+    const useCasePayload = {
+      threadId,
+      commentId,
+      owner,
+    };
+    await deleteCommentUseCase.execute(useCasePayload);
 
     const response = h.response({
       status: 'success',
