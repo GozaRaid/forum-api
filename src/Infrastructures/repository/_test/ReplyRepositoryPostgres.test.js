@@ -36,6 +36,13 @@ describe('ReplyRepositoryPostgres', () => {
         threadId: 'thread-123',
         commentId: 'comment-123',
       });
+
+      const expectedAddedReply = new AddedReply({
+        id: 'reply-123',
+        content: 'content',
+        owner: 'user-123',
+      });
+
       const fakeIdGenerator = () => '123';
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
 
@@ -43,11 +50,9 @@ describe('ReplyRepositoryPostgres', () => {
       const replyAdded = await replyRepositoryPostgres.addReply(addReply);
 
       // Assert
-      expect(replyAdded).toStrictEqual(new AddedReply({
-        id: 'reply-123',
-        content: 'content',
-        owner: 'user-123',
-      }));
+      const findReply = await ReplysTableTestHelper.findReplyById('reply-123');
+      expect(replyAdded).toStrictEqual(expectedAddedReply);
+      expect(findReply).toHaveLength(1);
     });
   });
 
@@ -112,14 +117,25 @@ describe('ReplyRepositoryPostgres', () => {
   describe('getAllReplies function', () => {
     it('should return all replies correctly', async () => {
       // Arrange
+      const excepectedResultReply = {
+        id: 'reply-123',
+        content: 'reply',
+        username: 'dicoding',
+        is_delete: false,
+      };
       await ReplysTableTestHelper.addReply({});
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
       // Action
       const replies = await replyRepositoryPostgres.getAllReplies('comment-123');
-
+      console.log(replies);
       // Assert
       expect(replies).toHaveLength(1);
+      expect(replies[0].id).toEqual(excepectedResultReply.id);
+      expect(replies[0].content).toEqual(excepectedResultReply.content);
+      expect(replies[0].username).toEqual(excepectedResultReply.username);
+      expect(replies[0].is_delete).toEqual(excepectedResultReply.is_delete);
+      expect(replies[0]).toHaveProperty('date');
     });
   });
 });

@@ -33,6 +33,12 @@ describe('ThreadRepositoryPostgres', () => {
         threadId: 'thread-123',
       });
 
+      const expectedAddedComment = new AddedComment({
+        id: 'comment-123',
+        content: 'content',
+        owner: 'user-123',
+      });
+
       const fakeIdGenerator = () => '123';
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
 
@@ -40,11 +46,9 @@ describe('ThreadRepositoryPostgres', () => {
       const addedComment = await commentRepositoryPostgres.addComment(addComment);
 
       // Assert
-      expect(addedComment).toStrictEqual(new AddedComment({
-        id: 'comment-123',
-        content: 'content',
-        owner: 'user-123',
-      }));
+      const findComment = await CommentsTableTestHelper.findCommentById('comment-123');
+      expect(findComment).toHaveLength(1);
+      expect(addedComment).toStrictEqual(expectedAddedComment);
     });
   });
 
@@ -105,6 +109,14 @@ describe('ThreadRepositoryPostgres', () => {
   describe('getCommentsByThreadId function', () => {
     it('should get comments correctly', async () => {
       // Arrange
+      const expectedResultComment = [
+        {
+          id: 'comment-123',
+          username: 'dicoding',
+          content: 'comment',
+          is_delete: false,
+        },
+      ];
       await CommentsTableTestHelper.addComment({});
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
@@ -113,6 +125,11 @@ describe('ThreadRepositoryPostgres', () => {
 
       // Assert
       expect(comment).toHaveLength(1);
+      expect(comment[0].id).toEqual(expectedResultComment[0].id);
+      expect(comment[0].username).toEqual(expectedResultComment[0].username);
+      expect(comment[0].content).toEqual(expectedResultComment[0].content);
+      expect(comment[0].is_delete).toEqual(expectedResultComment[0].is_delete);
+      expect(comment[0]).toHaveProperty('date');
     });
   });
 });

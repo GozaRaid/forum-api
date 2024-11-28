@@ -21,6 +21,12 @@ describe('AddReplyUseCase', () => {
       owner: useCasePayload.owner,
     });
 
+    const expectedAddedReply = new AddedReply({
+      id: 'reply-123',
+      content: useCasePayload.content,
+      owner: useCasePayload.owner,
+    });
+
     /** creating dependency of use case */
     const mockReplysRepository = new ReplysRepository();
     const mockCommentsRepository = new CommentsRepository();
@@ -45,13 +51,7 @@ describe('AddReplyUseCase', () => {
     const addedReply = await addReplyUseCase.execute(useCasePayload);
 
     // Assert
-    expect(addedReply).toStrictEqual(
-      new AddedReply({
-        id: 'reply-123',
-        content: mockAddedReply.content,
-        owner: mockAddedReply.owner,
-      }),
-    );
+    expect(addedReply).toStrictEqual(expectedAddedReply);
     expect(mockThreadRepository.verifyAvailabilityThread).toBeCalledWith(useCasePayload.threadId);
     expect(mockCommentsRepository.verifyAvailabilityComment)
       .toBeCalledWith(useCasePayload.commentId);

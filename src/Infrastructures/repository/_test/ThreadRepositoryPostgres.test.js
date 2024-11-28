@@ -28,6 +28,13 @@ describe('ThreadRepositoryPostgres', () => {
         body: 'body',
         owner: 'user-123',
       });
+
+      const expectedAddedThread = new AddedThread({
+        id: 'thread-123',
+        title: 'title',
+        owner: 'user-123',
+      });
+
       const fakeIdGenerator = () => '123';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
@@ -35,11 +42,9 @@ describe('ThreadRepositoryPostgres', () => {
       const addedThread = await threadRepositoryPostgres.addThread(addThread);
 
       // Assert
-      expect(addedThread).toStrictEqual(new AddedThread({
-        id: 'thread-123',
-        title: 'title',
-        owner: 'user-123',
-      }));
+      const findThread = await ThreadsTableTestHelper.findThreadById('thread-123');
+      expect(addedThread).toStrictEqual(expectedAddedThread);
+      expect(findThread).toHaveLength(1);
     });
   });
 
@@ -65,6 +70,13 @@ describe('ThreadRepositoryPostgres', () => {
   describe('getDetailThreadById function', () => {
     it('should return detail thread correctly', async () => {
       // Arrange
+      const expectedDetailThread = {
+        id: 'thread-123',
+        title: 'title',
+        body: 'body',
+        username: 'dicoding',
+      };
+
       await ThreadsTableTestHelper.addThread({});
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
@@ -72,11 +84,12 @@ describe('ThreadRepositoryPostgres', () => {
       const detailThread = await threadRepositoryPostgres.getDetailThreadById('thread-123');
 
       // Assert
-      expect(detailThread.id).toStrictEqual('thread-123');
-      expect(detailThread.title).toStrictEqual('title');
-      expect(detailThread.body).toStrictEqual('body');
-      expect(detailThread.date).toBeDefined();
-      expect(detailThread.username).toStrictEqual('dicoding');
+      expect(detailThread).toBeDefined();
+      expect(detailThread.id).toStrictEqual(expectedDetailThread.id);
+      expect(detailThread.title).toStrictEqual(expectedDetailThread.title);
+      expect(detailThread.body).toStrictEqual(expectedDetailThread.body);
+      expect(detailThread.username).toStrictEqual(expectedDetailThread.username);
+      expect(detailThread).toHaveProperty('date');
     });
   });
 });
