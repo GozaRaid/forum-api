@@ -19,7 +19,7 @@ const ReplysTableTestHelper = {
 
   async findReplyById(id) {
     const query = {
-      text: 'SELECT * FROM replys WHERE id=$1 AND is_deleted=FALSE',
+      text: 'SELECT * FROM replys WHERE id=$1 AND is_delete=FALSE',
       values: [id],
     };
 

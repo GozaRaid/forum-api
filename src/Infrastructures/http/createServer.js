@@ -12,12 +12,11 @@ const createServer = async (container) => {
   const server = Hapi.server({
     host: process.env.HOST,
     port: process.env.PORT,
-  });
-
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: () => 'Check health',
+    routes: {
+      cors: {
+        origin: ['*'],
+      },
+    },
   });
 
   await server.register({
