@@ -31,8 +31,8 @@ describe('/threads/{threadId}/comments/{commentId}/replies endpoint', () => {
       };
 
       const server = await createServer(container);
-      const thread = await ThreadsTableTestHelp.addThread({});
-      const comment = await CommentsTableTestHelper.addComment({});
+      await ThreadsTableTestHelp.addThread({});
+      await CommentsTableTestHelper.addComment({});
       const accessToken = await ServerTestHelper.getAccessToken();
 
       // Action
@@ -246,6 +246,29 @@ describe('/threads/{threadId}/comments/{commentId}/replies endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('thread tidak ditemukan');
+    });
+
+    it('should response 404 when reply not found', async () => {
+      // Arrange
+      const server = await createServer(container);
+      await ThreadsTableTestHelp.addThread({});
+      await CommentsTableTestHelper.addComment({});
+      const accessToken = await ServerTestHelper.getAccessToken();
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/threads/thread-123/comments/comment-123/replies/reply-123',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('balasan tidak ditemukan');
     });
   });
 });

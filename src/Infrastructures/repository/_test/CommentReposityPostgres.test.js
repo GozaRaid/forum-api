@@ -102,22 +102,24 @@ describe('ThreadRepositoryPostgres', () => {
 
       // Assert
       const comment = await CommentsTableTestHelper.findCommentById('comment-123');
-      expect(comment).toHaveLength(0);
+      expect(comment[0].is_delete).toEqual(true);
     });
   });
 
   describe('getCommentsByThreadId function', () => {
     it('should get comments correctly', async () => {
       // Arrange
+      const date = new Date().toISOString();
       const expectedResultComment = [
         {
           id: 'comment-123',
           username: 'dicoding',
           content: 'comment',
           is_delete: false,
+          date,
         },
       ];
-      await CommentsTableTestHelper.addComment({});
+      await CommentsTableTestHelper.addComment({ date });
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
       // Action
@@ -125,11 +127,7 @@ describe('ThreadRepositoryPostgres', () => {
 
       // Assert
       expect(comment).toHaveLength(1);
-      expect(comment[0].id).toEqual(expectedResultComment[0].id);
-      expect(comment[0].username).toEqual(expectedResultComment[0].username);
-      expect(comment[0].content).toEqual(expectedResultComment[0].content);
-      expect(comment[0].is_delete).toEqual(expectedResultComment[0].is_delete);
-      expect(comment[0]).toHaveProperty('date');
+      expect(comment).toStrictEqual(expectedResultComment);
     });
   });
 });

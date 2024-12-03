@@ -110,32 +110,29 @@ describe('ReplyRepositoryPostgres', () => {
 
       // Assert
       const replies = await ReplysTableTestHelper.findReplyById('reply-123');
-      expect(replies).toHaveLength(0);
+      expect(replies[0].is_delete).toEqual(true);
     });
   });
 
   describe('getAllReplies function', () => {
     it('should return all replies correctly', async () => {
       // Arrange
+      const date = new Date().toISOString();
       const excepectedResultReply = {
         id: 'reply-123',
         content: 'reply',
         username: 'dicoding',
         is_delete: false,
+        date,
       };
-      await ReplysTableTestHelper.addReply({});
+      await ReplysTableTestHelper.addReply({ date });
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(pool, {});
 
       // Action
       const replies = await replyRepositoryPostgres.getAllReplies('comment-123');
-      console.log(replies);
       // Assert
       expect(replies).toHaveLength(1);
-      expect(replies[0].id).toEqual(excepectedResultReply.id);
-      expect(replies[0].content).toEqual(excepectedResultReply.content);
-      expect(replies[0].username).toEqual(excepectedResultReply.username);
-      expect(replies[0].is_delete).toEqual(excepectedResultReply.is_delete);
-      expect(replies[0]).toHaveProperty('date');
+      expect(replies[0]).toStrictEqual(excepectedResultReply);
     });
   });
 });

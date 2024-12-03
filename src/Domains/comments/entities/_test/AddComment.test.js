@@ -37,5 +37,7 @@ describe('a AddComment entities', () => {
 
     // Assert
     expect(addComment.content).toEqual(payload.content);
+    expect(addComment.owner).toEqual(payload.owner);
+    expect(addComment.threadId).toEqual(payload.threadId);
   });
 });

@@ -16,14 +16,10 @@ describe('DeleteCommentUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
 
     /** mocking needed function */
-    mockCommentsRepository.verifyAvailabilityComment = jest.fn()
-      .mockImplementation(() => Promise.resolve());
-    mockThreadRepository.verifyAvailabilityThread = jest.fn()
-      .mockImplementation(() => Promise.resolve());
-    mockCommentsRepository.verifyCommentOwner = jest.fn()
-      .mockImplementation(() => Promise.resolve());
-    mockCommentsRepository.deleteCommentById = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+    mockCommentsRepository.verifyAvailabilityComment = jest.fn(() => Promise.resolve());
+    mockThreadRepository.verifyAvailabilityThread = jest.fn(() => Promise.resolve());
+    mockCommentsRepository.verifyCommentOwner = jest.fn(() => Promise.resolve());
+    mockCommentsRepository.deleteCommentById = jest.fn(() => Promise.resolve());
 
     // create use case instance
     const deleteCommentUseCase = new DeleteCommentUseCase({

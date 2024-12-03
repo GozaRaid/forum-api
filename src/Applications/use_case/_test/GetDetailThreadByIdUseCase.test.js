@@ -61,14 +61,10 @@ describe('GetDetailThreadById', () => {
     ];
 
     // Mocking repository methods
-    mockThreadRepository.verifyAvailabilityThread = jest.fn()
-      .mockImplementation(() => Promise.resolve());
-    mockThreadRepository.getDetailThreadById = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockThread));
-    mockCommentsRepository.getCommentsByThreadId = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockComments));
-    mockReplysRepository.getAllReplies = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockReplies));
+    mockThreadRepository.verifyAvailabilityThread = jest.fn(() => Promise.resolve());
+    mockThreadRepository.getDetailThreadById = jest.fn(() => Promise.resolve(mockThread));
+    mockCommentsRepository.getCommentsByThreadId = jest.fn(() => Promise.resolve(mockComments));
+    mockReplysRepository.getAllReplies = jest.fn(() => Promise.resolve(mockReplies));
 
     // Create use case instance
     const getDetailThreadByIdUseCase = new GetDetailThreadById({
@@ -92,7 +88,11 @@ describe('GetDetailThreadById', () => {
 
     // Verify thread details
     expect(detailedThread).toEqual({
-      ...mockThread,
+      id: 'thread-123',
+      title: 'Test Thread',
+      body: 'Thread body',
+      date: '2023-01-01',
+      username: 'johndoe',
       comments: [
         {
           id: 'comment-123',

@@ -31,11 +31,11 @@ class ThreadsHandler {
   async getDetailThreadById(request, h) {
     const { threadId } = request.params;
     const getDetailThreadByIdUseCase = this._container.getInstance(GetDetailThreadByIdUseCase.name);
-    const detailThread = await getDetailThreadByIdUseCase.execute({ threadId });
+    const thread = await getDetailThreadByIdUseCase.execute({ threadId });
     const response = h.response({
       status: 'success',
       data: {
-        thread: detailThread,
+        thread,
       },
     });
     response.code(200);

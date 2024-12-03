@@ -70,14 +70,16 @@ describe('ThreadRepositoryPostgres', () => {
   describe('getDetailThreadById function', () => {
     it('should return detail thread correctly', async () => {
       // Arrange
+      const date = new Date().toISOString();
       const expectedDetailThread = {
         id: 'thread-123',
         title: 'title',
         body: 'body',
         username: 'dicoding',
+        date,
       };
 
-      await ThreadsTableTestHelper.addThread({});
+      await ThreadsTableTestHelper.addThread({ date });
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       // Action
@@ -85,11 +87,7 @@ describe('ThreadRepositoryPostgres', () => {
 
       // Assert
       expect(detailThread).toBeDefined();
-      expect(detailThread.id).toStrictEqual(expectedDetailThread.id);
-      expect(detailThread.title).toStrictEqual(expectedDetailThread.title);
-      expect(detailThread.body).toStrictEqual(expectedDetailThread.body);
-      expect(detailThread.username).toStrictEqual(expectedDetailThread.username);
-      expect(detailThread).toHaveProperty('date');
+      expect(detailThread).toStrictEqual(expectedDetailThread);
     });
   });
 });
