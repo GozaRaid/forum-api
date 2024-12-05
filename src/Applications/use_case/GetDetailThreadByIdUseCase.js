@@ -1,8 +1,14 @@
 class GetDetailThreadById {
-  constructor({ threadRepository, commentsRepository, replyRepository }) {
+  constructor({
+    threadRepository,
+    commentsRepository,
+    replyRepository,
+    likeRepository,
+  }) {
     this._threadRepository = threadRepository;
     this._commentsRepository = commentsRepository;
     this._replyRepository = replyRepository;
+    this._likeRepository = likeRepository;
   }
 
   async execute(useCasePayload) {
@@ -13,6 +19,7 @@ class GetDetailThreadById {
     const commentsWithReplies = await Promise.all(
       comments.map(async (comment) => {
         const replies = await this._replyRepository.getAllReplies(comment.id);
+        const likeCount = await this._likeRepository.getAllLikes(comment.id);
         return {
           id: comment.id,
           username: comment.username,
@@ -24,6 +31,7 @@ class GetDetailThreadById {
             content: reply.is_delete ? '**balasan telah dihapus**' : reply.content,
           })),
           content: comment.is_delete ? '**komentar telah dihapus**' : comment.content,
+          likeCount,
         };
       }),
     );
