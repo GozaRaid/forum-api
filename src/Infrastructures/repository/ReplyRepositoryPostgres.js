@@ -70,6 +70,28 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     const result = await this._pool.query(query);
     return result.rows;
   }
+
+  // async getAllReplies(commentIds) {
+  //   const ids = Array.isArray(commentIds) ? commentIds : [commentIds];
+
+  //   const query = {
+  //     text: `SELECT replys.*, users.username
+  //            FROM replys INNER JOIN users ON replys.owner = users.id
+  //            WHERE replys.comment_id = ANY($1::text[]) ORDER BY replys.created_at ASC',
+  //     values: [ids],
+  //   };
+
+  //   const result = await this._pool.query(query);
+
+  //   return result.rows.reduce((acc, row) => {
+  //     acc[row.id].push({
+  //       id: row.id,
+  //       username: row.username,
+  //       date: row.created_at,
+  //       content: row.is_delete ? '**balasan telah dihapus**' : row.content,
+  //     });
+  //   }, {});
+  // }
 }
 
 module.exports = ReplyRepositoryPostgres;
